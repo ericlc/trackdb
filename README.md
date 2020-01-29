@@ -28,13 +28,6 @@ And has two types of execution:
 
 Trackdb uses the filename to capture the properties of execution.
 
-Filename syntax:
-- First character: V or R (version or repeatable execution)
-- Followed by numbers (max of ten)
-- Followed by double underscore
-- Followed by a description of the file
-- Followed by .sql extension
-
 Filename example: V01__create_table.sql
 - V - type of execution: version (checks if that SQL has already been executed)
 - 01 - number of execution
