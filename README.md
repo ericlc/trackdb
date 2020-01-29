@@ -14,22 +14,28 @@ trackdb follow some principles guidelines
 
 ## Trackdb syntax
 
-trackdb has two methods of executing a sql file:
+Trackdb has two methods of executing a sql file:
 
-1. flat SQL file
-2. track SQL file
+1. Flat SQL file
+2. Track SQL file
 
-and has two types of execution:
+And has two types of execution:
 
-1. version execution (V) - checks if that SQL has already been executed
-2. repeatable execution (R) - does not check if that SQL has already been executed
+1. Version execution (V) - checks if that SQL has already been executed
+2. Repeatable execution (R) - does not check if that SQL has already been executed
 
 ### Flat SQL File
 
-trackdb uses the filename to capture the properties of execution.
+Trackdb uses the filename to capture the properties of execution.
 
-filename example: V01__create_table.sql
+Filename syntax:
+- First character: V or R (version or repeatable execution)
+- Followed by numbers (max of ten)
+- Followed by double underscore
+- Followed by a description of the file
+- Followed by .sql extension
 
+Filename example: V01__create_table.sql
 - V - type of execution: version (checks if that SQL has already been executed)
 - 01 - number of execution
 - create_table - description of the file
