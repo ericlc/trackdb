@@ -14,6 +14,14 @@ trackdb follow some principles guidelines
 
 ## trackdb syntax
 
+trackdb has two methods of executing a sql file:
+
+1. Flat SQL file
+
+trackdb uses the filename to capture the properties of execution
+
+2. Track SQL file
+
 
 
 ## A sql file example (track sql file)
