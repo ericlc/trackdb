@@ -37,7 +37,7 @@ Filename example: V01__create_table.sql
 
 #### Example
 
-filename: V01_create_table.sql
+Filename: V01_create_table.sql
 
 ```SQL
 CREATE TABLE table_name (
