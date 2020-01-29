@@ -6,15 +6,15 @@ trackdb is an application to execute and track the execution of SQL in databases
 
 trackdb follow some principles guidelines
 
-- never modifies a sql script
+- never modifies a SQL script
 - hide sensitive output data of the execution
 - do not expose database password as plain text
-- execute mutiple sql files per request
+- execute mutiple SQL files per request
 - compatible with major rdbms such as: oracle, sql server, ibm db2, mysql and postgres
 
 ## Trackdb syntax
 
-Trackdb has two methods of executing a sql file:
+Trackdb has two methods of executing a SQL file:
 
 1. Flat SQL file
 2. Track SQL file
