@@ -1,10 +1,10 @@
 # trackdb
 
-trackdb is an application to execute and track the execution of SQL in databases. It is designed to enhance the application deployment that depends of databases changes.
+Trackdb is an application to execute and track the execution of SQL in databases. It is designed to enhance the application deployment that depends of databases changes.
 
 ## Objectives
 
-trackdb follow some principles guidelines
+Trackdb follow some principles guidelines
 
 - never modifies a SQL script
 - hide sensitive output data of the execution
