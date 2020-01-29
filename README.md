@@ -25,6 +25,7 @@ And has two types of execution:
 2. Repeatable execution (R) - does not check if that SQL has already been executed
 
 ### Flat SQL File
+-----------------
 
 Trackdb uses the filename to capture the properties of execution.
 
