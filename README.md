@@ -16,11 +16,19 @@ trackdb follow some principles guidelines
 
 trackdb has two methods of executing a sql file:
 
-1. Flat SQL file
+1. flat SQL file
+2. track SQL file
 
-trackdb uses the filename to capture the properties of execution
+and has two types of execution:
 
-2. Track SQL file
+1. version execution - checks if that SQL has already been executed
+2. repeatable execution - does not check if that SQL has already been executed
+
+### Flat SQL File
+
+trackdb uses the filename to capture the properties of execution.
+
+
 
 
 
