@@ -25,7 +25,6 @@ And has two types of execution:
 2. Repeatable execution (R) - does not check if that SQL has already been executed
 
 ### Flat SQL File
------------------
 
 Trackdb uses the filename to capture the properties of execution.
 
@@ -55,6 +54,7 @@ Trackdb uses SQL comments to capture the properties of execution.
 
 Track example:
 - --track:01 (V)
+- --track:02 (V)
 
 ##### Example
 
