@@ -77,5 +77,3 @@ CREATE TABLE table_name2 (
    ....
 );
 ```
-
-## Installing
