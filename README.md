@@ -12,7 +12,7 @@ trackdb follow some principles guidelines
 - execute mutiple sql files per request
 - compatible with major rdbms such as: oracle, sql server, ibm db2, mysql and postgres
 
-## trackdb syntax
+## Trackdb syntax
 
 trackdb has two methods of executing a sql file:
 
