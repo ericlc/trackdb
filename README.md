@@ -42,7 +42,7 @@ Filename example: V01__create_table.sql
 - create_table - description of the file
 - .sql - file extension
 
-##### Example
+### Example
 
 filename: V01_create_table.sql
 
@@ -56,6 +56,11 @@ CREATE TABLE table_name (
 ```
 
 ### Track SQL File
+
+Trackdb uses SQL comments to capture the properties of execution.
+
+Track example:
+- --track:01 (V)
 
 ##### Example
 
