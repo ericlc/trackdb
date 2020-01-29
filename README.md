@@ -30,10 +30,10 @@ trackdb uses the filename to capture the properties of execution.
 
 filename example: V01__create_table.sql
 
-V - type of execution: version (checks if that SQL has already been executed)\
-01 - number of execution\
-create_table - description of the file\
-.sql - file extension\
+- V - type of execution: version (checks if that SQL has already been executed)
+- 01 - number of execution
+- create_table - description of the file
+- .sql - file extension
 
 ## A sql file example (track sql file)
 
