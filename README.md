@@ -12,7 +12,7 @@ trackdb follow some principles guidelines
 - execute mutiple sql files per request
 - compatible with major rdbms such as: oracle, sql server, ibm db2, mysql and postgres
 
-### A simple example (track sql file)
+### A sql file example (track sql file)
 
 ```SQL
 --trackdb
@@ -34,7 +34,7 @@ CREATE TABLE table_name2 (
 );
 ```
 
-### Another simple example (flat sql file)
+### Another sql file example (flat sql file)
 
 filename: V01_create_table.sql
 
@@ -46,3 +46,5 @@ CREATE TABLE table_name (
    ....
 );
 ```
+
+## trackdb syntax
