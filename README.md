@@ -38,6 +38,7 @@ Filename syntax:
 Filename example: V01__create_table.sql
 - V - type of execution: version (checks if that SQL has already been executed)
 - 01 - number of execution
+- double underscore
 - create_table - description of the file
 - .sql - file extension
 
