@@ -21,8 +21,8 @@ trackdb has two methods of executing a sql file:
 
 and has two types of execution:
 
-1. version execution - checks if that SQL has already been executed
-2. repeatable execution - does not check if that SQL has already been executed
+1. version execution (V) - checks if that SQL has already been executed
+2. repeatable execution (R) - does not check if that SQL has already been executed
 
 ### Flat SQL File
 
@@ -34,6 +34,19 @@ filename example: V01__create_table.sql
 - 01 - number of execution
 - create_table - description of the file
 - .sql - file extension
+
+## Example
+
+filename: V01_create_table.sql
+
+```SQL
+CREATE TABLE table_name (
+    column1 datatype,
+    column2 datatype,
+    column3 datatype,
+   ....
+);
+```
 
 ## A sql file example (track sql file)
 
@@ -57,15 +70,4 @@ CREATE TABLE table_name2 (
 );
 ```
 
-## Another sql file example (flat sql file)
 
-filename: V01_create_table.sql
-
-```SQL
-CREATE TABLE table_name (
-    column1 datatype,
-    column2 datatype,
-    column3 datatype,
-   ....
-);
-```
