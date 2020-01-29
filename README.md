@@ -35,7 +35,7 @@ filename example: V01__create_table.sql
 - create_table - description of the file
 - .sql - file extension
 
-## Example
+### Example
 
 filename: V01_create_table.sql
 
