@@ -38,7 +38,7 @@ func factoryExecutableSQL(filename string, content *string) ([]ExecutableSQL, er
 	if trackHeaders != nil {
 		// validate and execute tracks
 		for _, trackHeader := range trackHeaders {
-			test := checkHeader(trackHeader)
+			_, test := checkHeader(trackHeader)
 			fmt.Println(test)
 		}
 	} else {
@@ -147,7 +147,7 @@ func checkHeaderOp(operation string) error {
 
 }
 
-func checkHeader(header string) error {
+func checkHeader(header string) (*Track, error) {
 	
 	var err error
 
@@ -159,7 +159,7 @@ func checkHeader(header string) error {
 	params := reg.Split(header, -1)
 
 	if len(params) < 2 {
-		return errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", header))
+		return nil, errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", header))
 	}
 
 	for k, param := range params {
@@ -167,24 +167,26 @@ func checkHeader(header string) error {
 		if k == 0 {
 			err = checkHeaderInit(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		} else if k == len(params)-1 {
 			// validate operation
 			err = checkHeaderOp(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		} else {
 			err = checkHeaderAtt(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
 		}
 
 	}
 
-	return nil
+	var track Track
+
+	return &track, nil
 
 }
 
