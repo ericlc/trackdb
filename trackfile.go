@@ -33,17 +33,17 @@ func factoryExecutableSQL(filename string, content *string) ([]ExecutableSQL, er
 	
 	var es []ExecutableSQL
 
-	trackHeaders := findTracks(content)
+	trackHeaders := findTrackHeaders(content)
 	
 	if trackHeaders != nil {
 		// validate and execute tracks
 		for _, trackHeader := range trackHeaders {
-			test := validateTrack(trackHeader)
+			test := checkHeader(trackHeader)
 			fmt.Println(test)
 		}
 	} else {
 		// validateFilename
-		fileProperties, err := validateFilename(filename)
+		fileProperties, err := checkFilename(filename)
 		if err != nil {
 			return nil, err
 		}
@@ -61,7 +61,7 @@ func factoryExecutableSQL(filename string, content *string) ([]ExecutableSQL, er
 
 }
 
-func validateFilename(filename string) (map[string]string, error) {
+func checkFilename(filename string) (map[string]string, error) {
 
 	// validate filename and returns file operation and id
 
@@ -87,21 +87,27 @@ func validateFilename(filename string) (map[string]string, error) {
 } 
 
 
-func findTracks(content *string) []string {
+func findTrackHeaders(content *string) []string {
 
 	reg := regexp.MustCompile("(?m)^ *--track.*$")
 	return reg.FindAllString(*content, -1)
 
 }
 
-func validateTrackHeader(header string) bool {
+func checkHeaderInit(header string) error {
 
-	reg := regexp.MustCompile("^--track:[0-9]{1,10}")
-	return reg.MatchString(header)
+	regStr := "^--track:[0-9]{1,10}"
+
+	reg := regexp.MustCompile(regStr)
+	if reg.MatchString(header) {
+		return nil
+	} else {
+		return errors.New(fmt.Sprintf("Invalid track header: %s", header))
+	}
 
 }
 
-func validateParam(param string) bool {
+func checkHeaderAtt(att string) error {
 
 	var validAttributes = map[string]string{
 		"multiThread": "true|false",
@@ -109,27 +115,41 @@ func validateParam(param string) bool {
 	}
 
 	reg := regexp.MustCompile(":")
-	attribute := reg.Split(param, -1)
+	attribute := reg.Split(att, -1)
 
-	if len(attribute) == 2 {
-		if _, ok := validAttributes[attribute[0]]; ok {
-			reg = regexp.MustCompile(validAttributes[attribute[0]])
-			return reg.MatchString(attribute[1])
-		}
+	if len(attribute) != 2 {
+		return errors.New(fmt.Sprintf("Invalid track parameter format: %s", att))
 	}
 
-	return false
+	if _, ok := validAttributes[attribute[0]]; !ok {
+		return errors.New(fmt.Sprintf("Invalid track parameter: %s", attribute[0]))
+	}
+
+	reg = regexp.MustCompile(validAttributes[attribute[0]])
+
+	if !reg.MatchString(attribute[1]) {
+		return errors.New(fmt.Sprintf("Invalid track parameter value: %s", attribute[1]))
+	}
+
+	return nil
 
 }
 
-func validateOperation(operation string) bool {
+func checkHeaderOp(operation string) error {
 
 	reg := regexp.MustCompile("^\\((v|r)\\)$")
-	return reg.MatchString(operation)
+	
+	if !reg.MatchString(operation) {
+		return errors.New(fmt.Sprintf("Invalid track operation: %s", operation))
+	}
+
+	return nil
 
 }
 
-func validateTrack(track string) bool {
+func checkHeader(track string) error {
+	
+	var err error
 
 	// clean last spaces
 	reg := regexp.MustCompile(" +$")
@@ -139,29 +159,32 @@ func validateTrack(track string) bool {
 	params := reg.Split(track, -1)
 
 	if len(params) < 2 {
-		return false
+		return errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", track))
 	}
 
 	for k, param := range params {
 
 		if k == 0 {
-			if !validateTrackHeader(param) {
-				return false
+			err = checkHeaderInit(param)
+			if err != nil {
+				return err
 			}
 		} else if k == len(params)-1 {
 			// validate operation
-			if !validateOperation(param) {
-				return false
+			err = checkHeaderOp(param)
+			if err != nil {
+				return err
 			}
 		} else {
-			if !validateParam(param) {
-				return false
+			err = checkHeaderAtt(param)
+			if err != nil {
+				return err
 			}
 		}
 
 	}
 
-	return true
+	return nil
 
 }
 
