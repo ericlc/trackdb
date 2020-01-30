@@ -147,19 +147,19 @@ func checkHeaderOp(operation string) error {
 
 }
 
-func checkHeader(track string) error {
+func checkHeader(header string) error {
 	
 	var err error
 
 	// clean last spaces
 	reg := regexp.MustCompile(" +$")
-	track = reg.ReplaceAllString(track, "")
+	header = reg.ReplaceAllString(header, "")
 
 	reg = regexp.MustCompile(" +")
-	params := reg.Split(track, -1)
+	params := reg.Split(header, -1)
 
 	if len(params) < 2 {
-		return errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", track))
+		return errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", header))
 	}
 
 	for k, param := range params {

@@ -73,7 +73,7 @@ func TestValidateParam(t *testing.T) {
 
 }
 
-func TestValidateOperation(t *testing.T) {
+func TestCheckHeaderOp(t *testing.T) {
 
 	var operations = map[string]bool{
 		"(v)":   true,
@@ -163,7 +163,7 @@ func TestFindTracks(t *testing.T) {
 
 }
 
-func TestValidateFilename(t *testing.T) {
+func TestCheckFilename(t *testing.T) {
 
 	filenameCorrect := []string{"V01__create_table.sql",
 		"v01__create_table.sql",
@@ -181,7 +181,7 @@ func TestValidateFilename(t *testing.T) {
 	}
 
 	for _, filename := range(filenameCorrect) {
-		_, err := validateFilename(filename)
+		_, err := checkFilename(filename)
 		if (err != nil) {
 			t.Errorf("validate filename %v error: expected no error, got %v", filename, err)
 		}		
@@ -210,7 +210,7 @@ func TestValidateFilename(t *testing.T) {
         "V01__ALTER__TABLE.SQL2",
 	}
 	for _, filename := range(filenameIncorrect) {
-		_, err := validateFilename(filename)
+		_, err := checkFilename(filename)
 		if (err == nil) {
 			t.Errorf("validate filename %v error: expected error, got nil", filename)
 		}		
