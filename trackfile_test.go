@@ -10,16 +10,16 @@ import (
 functions:
 
 - OpenSQLFile
-- findTracks *
-- validateTrackHeader *
-- validateParam *
-- validateOperation *
-- validateTrack
-
+- factoryExecutableSQL
+- checkFilename
+- findTrackHeaders
+- checkHeaderInit
+- checkHeaderAtt
+- checkHeaderOp
+- checkHeader
+- trackProperties
 
 */
-
-
 
 func TestValidateTrack(t *testing.T) {
 
