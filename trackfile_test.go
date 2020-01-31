@@ -52,21 +52,36 @@ func TestValidateTrack(t *testing.T) {
 
 }
 
-func TestValidateParam(t *testing.T) {
+func TestCheckHeaderAtt(t *testing.T) {
 
-	var params = map[string]bool{
-		"multiThread:true":      true,
-		"failOnError:true":      true,
-		"multiThread:false":     true,
-		"failOnError:false":     true,
-		"anotherParameter:true": false,
-		"otherParameter:true":   false,
+	var attsCorrect = []string{
+		"multiThread:true",
+		"failOnError:true",
+		"multiThread:false",
+		"failOnError:false",
+	}
+	
+	var attsIncorrect = []string{
+		"anotherParameter:true",
+		"otherParameter:true",
 	}
 
-	for key, value := range params {
 
-		if check := validateParam(key); check != value {
-			t.Errorf("validate param %v error: expected %v, got %v", key, value, check)
+	for _, att := range attsCorrect {
+
+		err := checkHeaderAtt(att)
+
+		if err != nil {
+			t.Errorf("header attribute %v error: expected no error, got %v", att, err)
+		}
+
+	}
+	for _, att := range attsIncorrect {
+
+		err := checkHeaderAtt(att)
+
+		if err == nil {
+			t.Errorf("header attribute %v error: expected error, got nil", att, err)
 		}
 
 	}
@@ -75,36 +90,45 @@ func TestValidateParam(t *testing.T) {
 
 func TestCheckHeaderOp(t *testing.T) {
 
-	var operations = map[string]bool{
-		"(v)":   true,
-		"(r)":   true,
-		"v":     false,
-		"r":     false,
-		"((v))": false,
-		"((r))": false,
-		`\(v\)`: false,
-		`\(r\)`: false,
-		"(vvv)": false,
-		"(rrr)": false,
-		"(a)":   false,
-		"(b)":   false,
-		"(vr)":  false,
-		"(rv)":  false,
-		" (v) ": false,
-		" (r) ": false,
+	var incorrectOperations = []string{
+		"v",
+		"r",
+		"((v))",
+		"((r))",
+		`\(v\)`,
+		`\(r\)`,
+		"(vvv)",
+		"(rrr)",
+		"(a)",
+		"(b)",
+		"(vr)",
+		"(rv)",
+		" (v) ",
+		" (r) ",
 	}
 
-	for key, value := range operations {
+	var correctOperations = []string{
+		"(v)",
+		"(r)",
+	}
 
-		if check := validateOperation(key); check != value {
-			t.Errorf("validate operation %v error: expected %v, got %v", key, value, check)
+	for _, operation := range correctOperations {
+		err := checkHeaderOp(operation)
+		if err != nil {
+			t.Errorf("operation %v error: expected no error, got %v", operation, err)
 		}
-
+	}
+	
+	for _, operation := range incorrectOperations {
+		err := checkHeaderOp(operation)
+		if err != nil {
+			t.Errorf("operation %v error: expected error, got nil", operation, err)
+		}
 	}
 
 }
 
-func TestValidateTrackHeader(t *testing.T) {
+func TestCheckHeaderInit(t *testing.T) {
 
 	var headers = map[string]bool{
 		"--track:01":         true,
@@ -114,12 +138,28 @@ func TestValidateTrackHeader(t *testing.T) {
 		"--track:0123456789": true,
 	}
 
-	for key, value := range headers {
+	var headersCorrect = []string{
+		"--track:01",
+		"--track:0",
+		"--track:0123456789",
+	}
 
-		if check := validateTrackHeader(key); check != value {
-			t.Errorf("validate track header %v error: expected %v, got %v", key, value, check)
+	var headersIncorrect = []string{
+		" --track:01",
+		"--track:",
+	}
+
+	for _, header := range headersCorrect {
+		err := checkHeaderInit(header)
+		if err != nil {
+			t.Errorf("track header %v error: expected no error, got %v", header, err)
 		}
-
+	}
+	for _, header := range headersCorrect {
+		err := checkHeaderInit(header)
+		if err != nil {
+			t.Errorf("track header %v error: expected no error, got %v", header, err)
+		}
 	}
 
 }
