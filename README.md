@@ -48,6 +48,19 @@ CREATE TABLE table_name (
 );
 ```
 
+Filename: R02_create_proc.sql
+
+```SQL
+CREATE OR REPLACE PROCEDURE remove_emp (employee_id NUMBER) AS
+   tot_emps NUMBER;
+   BEGIN
+      DELETE FROM employees
+      WHERE employees.employee_id = remove_emp.employee_id;
+   tot_emps := tot_emps - 1;
+   END;
+/
+```
+
 ### Track SQL File
 
 Trackdb uses SQL comments to capture the properties of execution.
@@ -69,11 +82,13 @@ CREATE TABLE table_name (
    ....
 );
 
---track:02 (v)
-CREATE TABLE table_name2 (
-    column1 datatype,
-    column2 datatype,
-    column3 datatype,
-   ....
-);
+--track:02 (r)
+CREATE OR REPLACE PROCEDURE remove_emp (employee_id NUMBER) AS
+   tot_emps NUMBER;
+   BEGIN
+      DELETE FROM employees
+      WHERE employees.employee_id = remove_emp.employee_id;
+   tot_emps := tot_emps - 1;
+   END;
+/
 ```
