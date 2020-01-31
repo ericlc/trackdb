@@ -66,8 +66,8 @@ CREATE OR REPLACE PROCEDURE remove_emp (employee_id NUMBER) AS
 Trackdb uses SQL comments to capture the properties of execution.
 
 Track example:
-- --track:01 (V)
-- --track:02 (V)
+- --track:01 (v)
+- --track:02 (r)
 
 #### Example
 
