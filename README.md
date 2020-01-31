@@ -35,6 +35,13 @@ Filename example: V01__create_table.sql
 - create_table - description of the file
 - .sql - file extension
 
+Filename example: R02_create_proc.sql
+- R - type of execution: repeatable (does not check, always execute)
+- 02 - number of execution
+- double underscore
+- create_proc - description of the file
+- .sql - file extension
+
 #### Example
 
 Filename: V01_create_table.sql
@@ -68,6 +75,8 @@ Trackdb uses SQL comments to capture the properties of execution.
 Track example:
 - --track:01 (V)
 - --track:02 (R)
+
+Filename: R02_create_proc.sql
 
 #### Example
 
