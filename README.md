@@ -70,13 +70,13 @@ CREATE OR REPLACE PROCEDURE remove_emp (employee_id NUMBER) AS
 
 ### Track SQL File
 
-Trackdb uses SQL comments to capture the properties of execution.
+Trackdb uses SQL comments to capture the properties of execution. The filename does not have any restrictions.
 
 Track example:
 - --track:01 (V)
 - --track:02 (R)
 
-Filename: R02_create_proc.sql
+Filename: changesv01.sql
 
 #### Example
 
