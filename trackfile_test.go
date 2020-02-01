@@ -19,71 +19,79 @@ functions:
 - checkHeader
 - trackProperties
 
+Test cases
+
+correct___
+incorrect___
+
 */
 
-func TestValidateTrack(t *testing.T) {
+func TestCheckTrackHeader(t *testing.T) {
 
-	var tracks = map[string]bool{
-		"--track:02":                                          false,
-		" --track:02":                                         false,
-		" --track :02":                                        false,
-		" --track :0 2":                                       false,
-		"--track:02 multiThread:false (v)":                    true,
-		"--track:02 failOnError:false (v)":                    true,
-		"--track:02 multiThread:true (v)":                     true,
-		"--track:02 failOnError:true (v)":                     true,
-		"--track:02 multiThread:false failOnError:false (v)":  true,
-		"--track:02 multiThread:true failOnError:true (v)":    true,
-		"--track:02 multiThread:test (v)":                     false,
-		"--track:02 failOnError:test (v)":                     false,
-		"--track:02 multiThread:test2 (v)":                    false,
-		"--track:02 failOnError:test2 (v)":                    false,
-		"--track:02 multiThread :false failOnError:false (v)": false,
-		"--track:02 multiThread :true failOnError:true (v)":   false,
+	var correctTrackHeaders = []string{
+		"--track:02 multiThread:false (v)",
+		"--track:02 failOnError:false (v)",
+		"--track:02 multiThread:true (v)",
+		"--track:02 failOnError:true (v)",
+		"--track:02 multiThread:false failOnError:false (v)",
+		"--track:02 multiThread:true failOnError:true (v)",
 	}
 
-	for key, value := range tracks {
+	var incorrectTrackHeaders = []string{
+		"--track:02",
+		" --track:02",
+		" --track :02",
+		" --track :0 2",
+		"--track:02 multiThread:test (v)",
+		"--track:02 failOnError:test (v)",
+		"--track:02 multiThread:test2 (v)",
+		"--track:02 failOnError:test2 (v)",
+		"--track:02 multiThread :false failOnError:false (v)",
+		"--track:02 multiThread :true failOnError:true (v)",
+	}
 
-		if check := validateTrack(key); check != value {
-			t.Errorf("validate track %v error: expected %v, got %v", key, value, check)
+	for _, trackHeader := range correctTrackHeaders {
+		err := checkTrackHeader(trackHeader)
+		if err != nil {
+			t.Errorf("track header %v error: expected no error, got %v", trackHeader, err)	
 		}
+	}
 
+	for _, trackHeader := range incorrectTrackHeaders {
+		err := checkTrackHeader(trackHeader)
+		if err == nil {
+			t.Errorf("track header %v error: expected error, got nil", trackHeader)	
+		}
 	}
 
 }
 
 func TestCheckHeaderAtt(t *testing.T) {
 
-	var attsCorrect = []string{
+	var correctAtts = []string{
 		"multiThread:true",
 		"failOnError:true",
 		"multiThread:false",
 		"failOnError:false",
 	}
 	
-	var attsIncorrect = []string{
+	var incorrecAtts = []string{
 		"anotherParameter:true",
 		"otherParameter:true",
 	}
 
 
-	for _, att := range attsCorrect {
-
+	for _, att := range correctAtts {
 		err := checkHeaderAtt(att)
-
 		if err != nil {
 			t.Errorf("header attribute %v error: expected no error, got %v", att, err)
 		}
-
 	}
-	for _, att := range attsIncorrect {
-
+	for _, att := range incorrecAtts {
 		err := checkHeaderAtt(att)
-
 		if err == nil {
-			t.Errorf("header attribute %v error: expected error, got nil", att, err)
+			t.Errorf("header attribute %v error: expected error, got nil", att)
 		}
-
 	}
 
 }
@@ -121,8 +129,8 @@ func TestCheckHeaderOp(t *testing.T) {
 	
 	for _, operation := range incorrectOperations {
 		err := checkHeaderOp(operation)
-		if err != nil {
-			t.Errorf("operation %v error: expected error, got nil", operation, err)
+		if err == nil {
+			t.Errorf("operation %v error: expected error, got nil", operation)
 		}
 	}
 
@@ -130,41 +138,33 @@ func TestCheckHeaderOp(t *testing.T) {
 
 func TestCheckHeaderInit(t *testing.T) {
 
-	var headers = map[string]bool{
-		"--track:01":         true,
-		"--track:0":          true,
-		" --track:01":        false,
-		"--track:":           false,
-		"--track:0123456789": true,
-	}
-
-	var headersCorrect = []string{
+	var correctHeaders = []string{
 		"--track:01",
 		"--track:0",
 		"--track:0123456789",
 	}
 
-	var headersIncorrect = []string{
+	var incorrectHeaders = []string{
 		" --track:01",
 		"--track:",
 	}
 
-	for _, header := range headersCorrect {
+	for _, header := range correctHeaders {
 		err := checkHeaderInit(header)
 		if err != nil {
 			t.Errorf("track header %v error: expected no error, got %v", header, err)
 		}
 	}
-	for _, header := range headersCorrect {
+	for _, header := range incorrectHeaders {
 		err := checkHeaderInit(header)
-		if err != nil {
+		if err == nil {
 			t.Errorf("track header %v error: expected no error, got %v", header, err)
 		}
 	}
 
 }
 
-func TestFindTracks(t *testing.T) {
+func TestFindTrackHeaders(t *testing.T) {
 
 	testCases := []struct {
 		trackHeader string
@@ -195,7 +195,7 @@ func TestFindTracks(t *testing.T) {
 
 	content := b.String()
 
-	tracks := findTracks(&content)
+	tracks := findTrackHeaders(&content)
 
 	if len(tracks) != total {
 		t.Errorf("find tracks error: expected %v tracks, got %v", len(tracks), total)
@@ -205,7 +205,7 @@ func TestFindTracks(t *testing.T) {
 
 func TestCheckFilename(t *testing.T) {
 
-	filenameCorrect := []string{"V01__create_table.sql",
+	correctFilename := []string{"V01__create_table.sql",
 		"v01__create_table.sql",
 		"R01__alter__table.sql",
 		"r01__alter__table.sql",
@@ -220,14 +220,14 @@ func TestCheckFilename(t *testing.T) {
         "R01__A_ALTER__TABLE.SQL",
 	}
 
-	for _, filename := range(filenameCorrect) {
+	for _, filename := range(correctFilename) {
 		_, err := checkFilename(filename)
 		if (err != nil) {
 			t.Errorf("validate filename %v error: expected no error, got %v", filename, err)
 		}		
 	}
 	
-	filenameIncorrect := []string{"V__xxxxx.sql",
+	incorrectFilename := []string{"V__xxxxx.sql",
 		" v01__create_table.sql",
 		"    R01__alter__table.sql",
 		"   r01__alter__table.sql",
@@ -249,7 +249,7 @@ func TestCheckFilename(t *testing.T) {
         "R01___ALTER__TABLE.SQL",
         "V01__ALTER__TABLE.SQL2",
 	}
-	for _, filename := range(filenameIncorrect) {
+	for _, filename := range(incorrectFilename) {
 		_, err := checkFilename(filename)
 		if (err == nil) {
 			t.Errorf("validate filename %v error: expected error, got nil", filename)
