@@ -35,7 +35,7 @@ Filename example: V01__create_table.sql
 - create_table - description of the file
 - .sql - file extension
 
-Filename example: R02_create_proc.sql
+Filename example: R02__create_proc.sql
 - R - type of execution: repeatable (does not check, always execute)
 - 02 - number of execution
 - double underscore
