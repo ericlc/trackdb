@@ -57,4 +57,16 @@ func main() {
 		os.Exit(1)
 	}
 
+	filename := commandLine.Lookup("filename").Value.String()
+	sqlToExecute, err := OpenSQLFile(filename)
+
+	if err != nil {
+		panic(err)
+	}
+
+	for _, sql := range(sqlToExecute) {
+		fmt.Printf("ID = %s\n", sql.Id())
+		fmt.Printf("%s\n", sql.SQL())
+	}
+
 }

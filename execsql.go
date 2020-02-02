@@ -1,5 +1,10 @@
 package main
 
+import (
+	"fmt"
+	"errors"
+)
+
 // there are two kinds of sql code execution
 // 1) sql originated by --track
 // 2) the full sql file
@@ -115,6 +120,32 @@ func (t Track) Property(p string) bool {
 	}
 
 	return false
+
+}
+
+func (t Track) SetProperty(p string, v string) error {
+
+	if p == "failOnError" {
+		if v == "true" {
+			t.failOnError = true
+		} else if v == "false" {
+			t.failOnError = false
+		} else {
+			return errors.New(fmt.Sprintf("Invalid property (%s) data type. It must be true/false", p))
+		}
+	} else if p == "multiThread" {
+		if v == "true" {
+			t.multiThread = true
+		} else if v == "false" {
+			t.multiThread = false
+		} else {
+			return errors.New(fmt.Sprintf("Invalid property (%s) data type. It must be true/false", p))
+		}
+	} else {
+		return errors.New(fmt.Sprintf("Invalid property (%s)", p))
+	}
+
+	return nil
 
 }
 

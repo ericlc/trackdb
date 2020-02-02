@@ -33,21 +33,26 @@ func factoryExecutableSQL(filename string, content *string) ([]ExecutableSQL, er
 	
 	var es []ExecutableSQL
 
-	trackHeaders := findTrackHeaders(content)
+	trackSQLs, trackHeaders := findTracks(content)
 	
 	if trackHeaders != nil {
-		// validate and execute tracks
-		for _, trackHeader := range trackHeaders {
-			test := checkTrackHeader(trackHeader)
-			fmt.Println(test)
+		// validate and return track headers
+		for i, trackHeader := range trackHeaders {
+			track, err := checkTrackHeader(trackHeader)
+			if err != nil {
+				return nil, err
+			}
+			track.filename = filename
+			track.sql = trackSQLs[i+1]
+			es = append(es, track)
 		}
 	} else {
-		// validateFilename
+		// checkFilename
 		fileProperties, err := checkFilename(filename)
 		if err != nil {
 			return nil, err
 		}
-		// execute file
+		// return file
 		var sqlFile SQLFile
 		sqlFile.id = fileProperties["id"]
 		sqlFile.filename = filename
@@ -87,69 +92,76 @@ func checkFilename(filename string) (map[string]string, error) {
 } 
 
 
-func findTrackHeaders(content *string) []string {
+func findTracks(content *string) ([]string, []string) {
 
 	reg := regexp.MustCompile("(?m)^ *--track.*$")
-	return reg.FindAllString(*content, -1)
+	return reg.Split(*content, -1), reg.FindAllString(*content, -1)
 
 }
 
-func checkHeaderInit(header string) error {
+func checkHeaderInit(header string) (*string, error) {
 
-	regStr := "^--track:[0-9]{1,10}"
+	regStr := "^--track:([0-9]{1,10})$"
 
 	reg := regexp.MustCompile(regStr)
 	if reg.MatchString(header) {
-		return nil
+		id := reg.FindStringSubmatch(header)[1]
+		return &id, nil
 	} else {
-		return errors.New(fmt.Sprintf("Invalid track header: %s", header))
+		return nil, errors.New(fmt.Sprintf("Invalid track header: %s", header))
 	}
 
 }
 
-func checkHeaderAtt(att string) error {
+func checkHeaderAtt(att string) (map[string]string, error) {
 
 	var validAttributes = map[string]string{
 		"multiThread": "true|false",
 		"failOnError": "true|false",
 	}
 
+	var attMap = make(map[string]string)
+
 	reg := regexp.MustCompile(":")
 	attribute := reg.Split(att, -1)
 
 	if len(attribute) != 2 {
-		return errors.New(fmt.Sprintf("Invalid track parameter format: %s", att))
+		return nil, errors.New(fmt.Sprintf("Invalid track parameter format: %s", att))
 	}
 
 	if _, ok := validAttributes[attribute[0]]; !ok {
-		return errors.New(fmt.Sprintf("Invalid track parameter: %s", attribute[0]))
+		return nil, errors.New(fmt.Sprintf("Invalid track parameter: %s", attribute[0]))
 	}
 
 	reg = regexp.MustCompile(validAttributes[attribute[0]])
 
 	if !reg.MatchString(attribute[1]) {
-		return errors.New(fmt.Sprintf("Invalid track parameter value: %s", attribute[1]))
+		return nil, errors.New(fmt.Sprintf("Invalid track parameter value: %s", attribute[1]))
 	}
 
-	return nil
+	attMap[attribute[0]] = attribute[1]
+
+	return attMap, nil
 
 }
 
-func checkHeaderOp(operation string) error {
+func checkHeaderOp(operation string) (*string, error) {
 
 	reg := regexp.MustCompile("^\\((v|r)\\)$")
 	
 	if !reg.MatchString(operation) {
-		return errors.New(fmt.Sprintf("Invalid track operation: %s", operation))
+		return nil, errors.New(fmt.Sprintf("Invalid track operation: %s", operation))
 	}
 
-	return nil
+	op := strings.ToUpper(reg.FindStringSubmatch(operation)[1])
+
+	return &op, nil
 
 }
 
-func checkTrackHeader(header string) error {
+func checkTrackHeader(header string) (*Track, error) {
 	
-	var err error
+	var track Track
 
 	// clean last spaces
 	reg := regexp.MustCompile(" +$")
@@ -159,32 +171,41 @@ func checkTrackHeader(header string) error {
 	params := reg.Split(header, -1)
 
 	if len(params) < 2 {
-		return errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", header))
+		return nil, errors.New(fmt.Sprintf("Invalid track header (incomplete): %s", header))
 	}
 
 	for k, param := range params {
 
 		if k == 0 {
-			err = checkHeaderInit(param)
+			id, err := checkHeaderInit(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
+			track.id = *id
 		} else if k == len(params)-1 {
 			// validate operation
-			err = checkHeaderOp(param)
+			op, err := checkHeaderOp(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
+			track.operation = *op
 		} else {
-			err = checkHeaderAtt(param)
+			attMap, err := checkHeaderAtt(param)
 			if err != nil {
-				return err
+				return nil, err
 			}
+			for key, value := range(attMap) {
+				err = track.SetProperty(key, value)
+				if err != nil {
+					return nil, err
+				}
+			}
+
 		}
 
 	}
 
-	return nil
+	return &track, nil
 
 }
 
