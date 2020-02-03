@@ -44,7 +44,7 @@ Filename example: R02__create_proc.sql
 
 #### Example
 
-Filename: V01_create_table.sql
+Filename: V01__create_table.sql
 
 ```SQL
 CREATE TABLE table_name (
@@ -55,7 +55,7 @@ CREATE TABLE table_name (
 );
 ```
 
-Filename: R02_create_proc.sql
+Filename: R02__create_proc.sql
 
 ```SQL
 CREATE OR REPLACE PROCEDURE remove_emp (employee_id NUMBER) AS
